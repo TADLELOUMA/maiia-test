@@ -44,8 +44,6 @@ public class ProAvailabilityService {
                 .collect(Collectors.toList()));
         allOccupiedSlots.addAll(existing);
 
-        allOccupiedSlots.sort(Comparator.comparing(Availability::getStartDate));
-
         for (TimeSlot timeSlot : timeSlots) {
             availabilities.addAll(calculateAvailableSlots(practitionerId, timeSlot, allOccupiedSlots));
         }
@@ -85,9 +83,12 @@ public class ProAvailabilityService {
     }
 
     private Optional<Availability> findOverlappingAvailability(List<Availability> allOccupiedSlots, LocalDateTime slotStart, LocalDateTime slotEnd) {
-        return allOccupiedSlots.stream()
-                .filter(slot -> slot.getStartDate().isBefore(slotEnd) && slot.getEndDate().isAfter(slotStart))
-                .findFirst();
+        List<Availability> conflicts = allOccupiedSlots.stream()
+                .filter(slot -> slot.getStartDate().isBefore(slotEnd) && slot.getEndDate().isAfter(slotStart)).sorted(Comparator.comparing(Availability::getEndDate)).collect(Collectors.toList());
+        if(conflicts.isEmpty()){
+            return Optional.empty();
+        }
+        return Optional.ofNullable(conflicts.get(conflicts.size()-1));
     }
 
     private LocalDateTime generateNextDate(LocalDateTime currentDate, LocalDateTime endDate, long slotDuration) {
