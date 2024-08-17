@@ -19,4 +19,5 @@ public class ProPatientService {
     public List<Patient> findAll() {
         return patientRepository.findAll();
     }
+
 }

@@ -196,4 +196,24 @@ class ProAvailabilityServiceTest {
         expectedStartDate.add(startDate.plusMinutes(50));
         assertTrue(availabilitiesStartDate.containsAll(expectedStartDate));
     }
+
+    @Test
+    void generateOptimalAvailabilitiesWhenTimeSlotIsNotMultipleFifteen() {
+        LocalDateTime lastAvailabilityStartDate = LocalDateTime.of(2020, Month.FEBRUARY, 5, 12, 20, 0);
+        Practitioner practitioner = practitionerRepository.save(entityFactory.createPractitioner());
+        LocalDateTime startDate = LocalDateTime.of(2020, Month.FEBRUARY, 5, 11, 0, 0);
+        timeSlotRepository.save(entityFactory.createTimeSlot(practitioner.getId(), startDate, startDate.plusHours(1).plusMinutes(25)));
+        appointmentRepository.save(entityFactory.createAppointment(practitioner.getId(),
+                patient_id,
+                startDate.plusMinutes(20),
+                startDate.plusMinutes(35)));
+
+        List<Availability> availabilities = proAvailabilityService.generateAvailabilities(practitioner.getId());
+
+        assertEquals(5, availabilities.size());
+        Availability lastAvailability= availabilities.get(4);
+
+        assertTrue(lastAvailability.getStartDate().isEqual(lastAvailabilityStartDate));
+        assertTrue(lastAvailability.getEndDate().isEqual(lastAvailabilityStartDate.plusMinutes(5)));
+    }
 }
