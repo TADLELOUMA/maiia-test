@@ -5,7 +5,7 @@
   "scripts": {
     "build": "next build",
     "dev": "SERVER_API_ENDPOINT=http://localhost:8080 next dev",
-	"dev-windows": "next dev",
+    "dev-windows": "next dev",
     "lint": "eslint --ext .tsx,.ts --fix src/",
     "start": "next start"
   },
@@ -18,10 +18,10 @@
     "express": "^4.17.1",
     "faker": "^5.3.1",
     "lodash": "^4.17.20",
-    "next": "10.0.6",
+    "next": "^14.2.5",
     "querystring": "^0.2.0",
-    "react": "17.0.1",
-    "react-dom": "17.0.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "react-hook-form": "^6.15.1",
     "react-redux": "^7.2.2",
     "redux": "^4.0.5",
